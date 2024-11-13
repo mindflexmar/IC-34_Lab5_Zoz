@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Array Calculation</title>
+  <style>
+    /* Стили для модального окна */
+    #modal {
+      display: block; /* Модальное окно открывается сразу */
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-content {
+      background-color: white;
+      padding: 20px;
+      border-radius: 5px;
+      text-align: center;
+      width: 300px;
+    }
+    .output {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<div id="modal">
+  <div class="modal-content">
+    <h2>Array Calculation</h2>
+    <label for="arraySize">Enter the size of array A:</label>
+    <input type="number" id="arraySize" min="1" required>
+    <button onclick="generateArray()">Generate Array</button>
+    <div class="output">
+      <p id="arrayA"></p>
+      <p id="arrayB"></p>
+      <p id="sortedArrayB"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+  function generateArray() {
+    const size = parseInt(document.getElementById('arraySize').value);
+    if (isNaN(size) || size <= 0) {
+      alert("Please enter a valid size.");
+      return;
+    }
+
+    const arrayA = Array.from({ length: size }, () => Math.floor(Math.random() * 100));
+    const maxElement = Math.max(...arrayA);
+
+    const arrayB = arrayA.map(ai => maxElement * ai);
+    
+    // Сортировка методом вставки
+    function insertionSortDescending(arr) {
+      for (let i = 1; i < arr.length; i++) {
+        let key = arr[i];
+        let j = i - 1;
+        while (j >= 0 && arr[j] < key) {
+          arr[j + 1] = arr[j];
+          j = j - 1;
+        }
+        arr[j + 1] = key;
+      }
+      return arr;
+    }
+    const sortedArrayB = insertionSortDescending([...arrayB]);
+
+    // Отображение массивов на странице
+    document.getElementById('arrayA').textContent = `Array A: [${arrayA.join(", ")}]`;
+    document.getElementById('arrayB').textContent = `Array B: [${arrayB.join(", ")}]`;
+    document.getElementById('sortedArrayB').textContent = `Sorted Array B: [${sortedArrayB.join(", ")}]`;
+  }
+</script>
+
+</body>
+</html>

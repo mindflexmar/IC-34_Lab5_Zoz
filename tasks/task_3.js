@@ -18,8 +18,14 @@ function filterArrayFromPrompt() {
 
         const result = filterArray(numbersArray, filterValue);
 
-        document.getElementById('result').textContent = result.length > 0 ? result.join(', ') : 'Немає чисел більше ніж ' + filterValue;
+        console.log(result.length > 0 
+            ? 'Числа більше ніж ' + filterValue + ': ' + result.join(', ') 
+            : 'Немає чисел більше ніж ' + filterValue);
     } else {
-        document.getElementById('result').textContent = 'Операція була скасована користувачем.';
+        console.log('Операція була скасована користувачем.');
     }
 }
+
+window.onload = function() {
+    filterArrayFromPrompt();
+};

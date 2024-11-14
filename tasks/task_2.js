@@ -12,11 +12,11 @@ function checkMessageForSpam() {
     if (messageInput !== null) {
         const isSpam = checkForSpam(messageInput);
 
-        document.getElementById('result').textContent = isSpam
+        console.log(isSpam
             ? "Повідомлення містить спам."
-            : "Повідомлення не містить спам.";
+            : "Повідомлення не містить спам.");
     } else {
-        document.getElementById('result').textContent = 'Операція була скасована користувачем.';
+        console.log('Операція була скасована користувачем.');
     }
 }
 

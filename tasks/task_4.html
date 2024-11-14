@@ -5,16 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Array Calculation</title>
   <style>
-    /* Стили для модального окна */
     #modal {
-      display: block; /* Модальное окно открывается сразу */
+      display: flex;
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
       background-color: rgba(0, 0, 0, 0.5);
-      display: flex;
       align-items: center;
       justify-content: center;
     }
@@ -25,59 +23,93 @@
       text-align: center;
       width: 300px;
     }
-    .output {
-      margin-top: 20px;
+    #result {
+      margin: 20px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
     }
   </style>
 </head>
 <body>
 
+
 <div id="modal">
   <div class="modal-content">
     <h2>Array Calculation</h2>
-    <label for="arraySize">Enter the size of array A:</label>
+    <label for="arraySize">Enter array size:</label>
     <input type="number" id="arraySize" min="1" required>
-    <button onclick="generateArray()">Generate Array</button>
-    <div class="output">
-      <p id="arrayA"></p>
-      <p id="arrayB"></p>
-      <p id="sortedArrayB"></p>
-    </div>
+    <button onclick="calculateArrays()">Generate and Calculate</button>
   </div>
 </div>
 
+
+<div id="result">
+  <h2>Results:</h2>
+  <p id="arrayA"></p>
+  <p id="arrayB"></p>
+  <p id="arrayCBefore"></p>
+  <p id="arrayCAfterSwap"></p>
+  <p id="arrayCSorted"></p>
+</div>
+
 <script>
-  function generateArray() {
-    const size = parseInt(document.getElementById('arraySize').value);
-    if (isNaN(size) || size <= 0) {
-      alert("Please enter a valid size.");
+  function calculateArrays() {
+    const arraySize = parseInt(document.getElementById('arraySize').value); // Получаем размер массива от пользователя
+
+    
+    if (isNaN(arraySize) || arraySize <= 0) {
+      alert("Please enter a valid array size.");
       return;
     }
 
-    const arrayA = Array.from({ length: size }, () => Math.floor(Math.random() * 100));
-    const maxElement = Math.max(...arrayA);
-
-    const arrayB = arrayA.map(ai => maxElement * ai);
     
-    // Сортировка методом вставки
-    function insertionSortDescending(arr) {
-      for (let i = 1; i < arr.length; i++) {
-        let key = arr[i];
-        let j = i - 1;
-        while (j >= 0 && arr[j] < key) {
-          arr[j + 1] = arr[j];
-          j = j - 1;
-        }
-        arr[j + 1] = key;
-      }
+    document.getElementById('modal').style.display = 'none';
+
+
+    const A = Array.from({ length: arraySize }, () => Math.floor(Math.random() * 100)); 
+    const B = Array.from({ length: arraySize }, () => Math.floor(Math.random() * 100));
+
+    
+    const C = A.map((ai, i) => ai !== B[i] ? 1 / (ai - B[i]) : 1);
+
+    
+    function swapMaxAndFirst(arr) {
+      const maxIndex = arr.indexOf(Math.max(...arr)); 
+      [arr[0], arr[maxIndex]] = [arr[maxIndex], arr[0]]; 
       return arr;
     }
-    const sortedArrayB = insertionSortDescending([...arrayB]);
 
-    // Отображение массивов на странице
-    document.getElementById('arrayA').textContent = `Array A: [${arrayA.join(", ")}]`;
-    document.getElementById('arrayB').textContent = `Array B: [${arrayB.join(", ")}]`;
-    document.getElementById('sortedArrayB').textContent = `Sorted Array B: [${sortedArrayB.join(", ")}]`;
+    
+    const C_before = [...C];
+
+    
+    const C_after = swapMaxAndFirst(C);
+
+    
+    function bubbleSort(arr) {
+      let swapped;
+      do {
+        swapped = false;
+        for (let i = 0; i < arr.length - 1; i++) {
+          if (arr[i] > arr[i + 1]) {
+            [arr[i], arr[i + 1]] = [arr[i + 1], arr[i]]; 
+            swapped = true;
+          }
+        }
+      } while (swapped);
+      return arr;
+    }
+
+    
+    const sortedC = bubbleSort([...C_after]);
+
+   
+    document.getElementById('arrayA').textContent = `Array A: ${A.join(', ')}`;
+    document.getElementById('arrayB').textContent = `Array B: ${B.join(', ')}`;
+    document.getElementById('arrayCBefore').textContent = `Array C before swapping: ${C_before.join(', ')}`;
+    document.getElementById('arrayCAfterSwap').textContent = `Array C after swapping max and first: ${C_after.join(', ')}`;
+    document.getElementById('arrayCSorted').textContent = `Array C after bubble sort: ${sortedC.join(', ')}`;
   }
 </script>
 
